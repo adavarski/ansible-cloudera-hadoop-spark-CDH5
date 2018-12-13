@@ -48,7 +48,4 @@
   with_items:
     - spark-history-server
 
-- name: test
-  tags: test
-  command: sudo -Hu hdfs spark-submit --master yarn-cluster --class org.apache.spark.examples.SparkPi --num-executors 2 --driver-cores 1 --driver-memory 256m --executor-memory 256m --executor-cores 2 --queue default /usr/lib/spark/lib/spark-examples.jar 10
-  run_once: true
+

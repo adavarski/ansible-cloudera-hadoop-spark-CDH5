@@ -1,7 +1,3 @@
-{% if groups['master']|count > 1 %}
-export SPARK_HISTORY_SERVER_LOG_DIR=hdfs://cluster_name{{ spark_history_server_dir }}
-{% else %}
 export SPARK_HISTORY_SERVER_LOG_DIR=hdfs://{{ groups['master'][0] }}:8020{{ spark_history_server_dir }}
-{% endif %}
 export SPARK_HISTORY_OPTS="$SPARK_HISTORY_OPTS -Dspark.history.fs.logDirectory=${SPARK_HISTORY_SERVER_LOG_DIR}"
 export SPARK_CONF_DIR=/etc/spark/conf

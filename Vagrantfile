@@ -1,52 +1,39 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+VAGRANTFILE_API_VERSION = "2"
 
-SUPPORTED_OS = {
-  "centos-7"  => {box: "centos/7",            box_v: ""},
-  # "debian/jessie64",
-  # "ubuntu/precise64",
-  # "ubuntu/trusty64",
-  # "bento/opensuse-13.2",
-}
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "bento/centos-7.5"
+  config.ssh.insert_key = false
 
-$subnet = "192.168.102"
-$num_instances = 2
-$vm_memory = 1280
-$vm_cpus = 1
-$instance_name_prefix = "hadoop"
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
-Vagrant.configure("2") do |config|
-  config.vm.box_check_update = false
+    # configs for vagrant-hostmanager
+    if Vagrant.has_plugin?("HostManager")
+      config.hostmanager.enabled = true
+      config.hostmanager.manage_host = true
+    else
+      raise "ERROR can't find vagrant-hostmanager! Please install it w/ vagrant plugin install vagrant-hostmanager"
+    end
+  
+  config.vm.define "hadoopmaster" do |c|
+    c.vm.hostname = "hadoopmaster"
+    c.vm.network :private_network, ip: "192.168.50.11"
+    c.vm.provider :virtualbox do |vb|
+      vb.customize ['modifyvm', :id, '--memory', 1280]
+      vb.customize ['modifyvm', :id, '--cpuexecutioncap', '70']
+      vb.customize ['modifyvm', :id, '--cpus', 1]
+      vb.customize ["modifyvm", :id, "--audio", "none"]
 
-oses = [
-  "centos-7",
-]
-  max_id = $num_instances - 1
-  (0..max_id).each do |i|
-    subip = 100 + i
-    ip = "#{$subnet}.#{subip}"
-    config.vm.define node_name = "%s-%02d" % [$instance_name_prefix, i] do |node|
-      os_name = oses[i % oses.length]
-      os_def = SUPPORTED_OS[os_name]
-      node.vm.hostname = node_name
+    end
+  end
 
-      node.vm.box = os_def[:box]
-      if os_def.has_key? :box_v
-        node.vm.box_version = os_def[:box_v]
-      end
+  config.vm.define "hadoopslave1" do |c|
+    c.vm.hostname = "hadoopslave1"
+    c.vm.network :private_network, ip: "192.168.50.12"
+    c.vm.provider :virtualbox do |vb|
+      vb.customize ['modifyvm', :id, '--memory', 1024]
+      vb.customize ['modifyvm', :id, '--cpuexecutioncap', '50']
+      vb.customize ['modifyvm', :id, '--cpus', 1]
+      vb.customize ["modifyvm", :id, "--audio", "none"]
 
-      node.vm.network "private_network" , ip: "#{ip}"
-      node.vm.provider "virtualbox" do |v|
-        v.name = node_name
-        v.cpus = $vm_cpus
-        v.memory = $vm_memory
-      end
-      # copy private key so hosts can ssh using key authentication (the script below sets permissions to 600)
-      node.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "host_id_rsa.pub"
     end
   end
 end

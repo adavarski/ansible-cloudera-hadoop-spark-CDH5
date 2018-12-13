@@ -11,10 +11,10 @@
     - spark-history-server
 
 - name: create configuration directory
-  file: path=/etc/spark/conf.cluster_name state=directory
+  file: path=/etc/spark/conf.cluster state=directory
 
 - name: setup alternatives link
-  alternatives: name=spark-conf link=/etc/spark/conf path=/etc/spark/conf.cluster_name
+  alternatives: name=spark-conf link=/etc/spark/conf path=/etc/spark/conf.cluster
 
 - name: install default configurations
   tags: config

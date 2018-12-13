@@ -1,3 +1,11 @@
+# Configure /etc/hosts
+- name: Update /etc/hosts {{ ":" }} drop 127.0.0.1 to hostname (avoid address binding problem)
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^(127\.0\.0\.1)(.*)({{ansible_hostname}})'
+    state: absent
+  become: true 
+
 - name: Disable SELinux
   selinux:
     state: disabled

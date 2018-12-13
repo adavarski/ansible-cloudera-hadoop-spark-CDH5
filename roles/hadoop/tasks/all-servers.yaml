@@ -1,0 +1,20 @@
+- name: Setup config directory
+  file:
+    path: /etc/hadoop/conf.cloudera_install
+    state: directory
+
+- name: Setup alternatives for Config
+  alternatives:
+    name: hadoop-conf
+    link: /etc/hadoop/conf
+    path: /etc/hadoop/conf.cloudera_install
+
+- name: Setup Configuration files for hadoop
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/hadoop/conf.cloudera_install/{{ item }}
+  with_items:
+    - core-site.xml
+    - hdfs-site.xml
+    - mapred-site.xml
+    - yarn-site.xml

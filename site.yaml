@@ -1,0 +1,43 @@
+---
+
+- name: Initial Setup for Instance
+  hosts: launched
+  roles:
+    - common
+
+- name: Install Zookeeper
+  hosts: master 
+  become: true
+  roles:
+    - zookeeper
+
+- name: Deploy Configuration to all servers
+  hosts: launched
+  become: true
+  roles:
+    - {role: hadoop, deploy: 'all-servers'}
+
+- name: Deploy NameNode
+  hosts: master 
+  become: true
+  roles:
+    - {role: hadoop, deploy: 'namenode'}
+
+- name: Deploy DataNodes
+  hosts: slaves 
+  become: true
+  roles:
+    - {role: hadoop, deploy: 'datanode'}
+
+- name: Deploy ResourceManager
+  hosts: master 
+  become: true
+  roles:
+    - {role: hadoop, deploy: 'resource-manager'}
+
+- name: Install Spark
+  hosts: master
+  become: true
+  roles:
+    - spark
+

@@ -1,0 +1,32 @@
+- name: Install Resource Manager
+  yum:
+    name: hadoop-yarn-resourcemanager
+    state: latest
+
+- name: Install History Server
+  yum:
+    name: hadoop-mapreduce-historyserver
+
+- name: Setup HDFS
+  command: sudo -u hdfs hadoop fs {{ item }}
+  with_items:
+    - -mkdir /tmp
+    - -chmod -R 1777 /tmp
+    - -mkdir -p /user/history
+    - -chmod -R 1777 /user/history
+    - -chown mapred:hadoop /user/history
+  run_once: true
+
+- name: start services
+  tags: service
+  service: name="{{ item }}" state=restarted enabled=yes
+  with_items:
+    - hadoop-yarn-resourcemanager
+
+- name: start services
+  tags: service
+  service:
+    name: "{{ item }}"
+    state: started
+  with_items:
+    - hadoop-mapreduce-historyserver

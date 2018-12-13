@@ -1,0 +1,11 @@
+- include: all-servers.yaml
+  when: deploy == "all-servers"
+
+- include: namenode.yaml
+  when: deploy == "namenode"
+
+- include: datanode.yaml
+  when: deploy == "datanode"
+
+- include: resource-manager.yaml
+  when: deploy == "resource-manager"

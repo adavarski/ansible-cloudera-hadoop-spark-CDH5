@@ -1,0 +1,26 @@
+# standalone Zookeeper for testing purposes
+- name: Install Zookeeper Base
+  yum:
+    name: zookeeper
+    state: latest
+
+- name: Install Zookeeper Server as standalone (single node)
+  yum:
+    name: zookeeper-server
+    state: latest
+
+- name: Config directories
+  file:
+    path: /var/lib/zookeeper
+    state: directory
+    owner: zookeeper
+    recurse: yes
+    mode: 0755
+
+- name: Initialise Zookeeper
+  command: service zookeeper-server init --force
+
+- name: Start Zookeeper
+  service:
+    name: zookeeper-server
+    state: started

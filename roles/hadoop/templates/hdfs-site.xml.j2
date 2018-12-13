@@ -1,0 +1,25 @@
+<configuration>
+  <property>
+    <name>dfs.permissions.superusergroup</name>
+    <value>hadoop</value>
+  </property>
+
+  <property>
+    <name>dfs.namenode.name.dir</name>
+     <value>{{ dfs_namenode_name_dir }}</value>
+   </property>
+
+   <property>
+     <name>dfs.datanode.data.dir</name>
+     <value>{{ dfs_datanode_data_dir }}</value>
+   </property>
+
+   <property>
+     <name>dfs.namenode.http-address</name>
+     <value>{{ groups['master'][0] }}:50070</value>
+     <description>
+       The address and the base port on which the dfs NameNode Web UI will listen.
+     </description>
+   </property>
+
+</configuration>

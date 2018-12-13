@@ -1,0 +1,37 @@
+- name: Disable SELinux
+  selinux:
+    state: disabled
+  become: true
+
+- name: Update all packages
+  yum:
+    name: '*'
+    state: latest
+  become: true
+
+- name: Download Oracle JDK8
+  get_url:
+    url=https://download.oracle.com/otn-pub/java/jdk/8u192-b12/750e1c8617c5452694857ad95c3ee230/jdk-8u192-linux-x64.rpm
+    dest=/tmp
+    headers='Cookie:gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'
+
+- name: install oracle java 8
+  yum:
+    name: /tmp/jdk-8u192-linux-x64.rpm
+    state: present
+  become: true
+
+- name: Install ntp 
+  yum:
+    name: ntp
+    state: latest
+  become: true
+
+- name:
+  yum_repository:
+    name: cloudera-hadoop-5
+    baseurl: https://archive.cloudera.com/cdh5/redhat/7/x86_64/cdh/5/
+    gpgkey: https://archive.cloudera.com/cdh5/redhat/7/x86_64/cdh/RPM-GPG-KEY-cloudera
+    gpgcheck: yes
+    description: Packages for Cloudera's Distribution for Hadoop, Version 5, on RedHat	or CentOS 7 x86_64
+  become: true

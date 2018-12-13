@@ -1,0 +1,4 @@
+dfs_namenode_name_dir: file:///data/1/dfs/nn
+dfs_datanode_data_dir: file:///data/1/dfs/dn
+yarn_nodemanager_local_dirs: file:///data/1/yarn/local,file:///data/2/yarn/local,file:///data/3/yarn/local
+yarn_nodemanager_log_dirs: file:///data/1/yarn/logs,file:///data/2/yarn/logs,file:///data/3/yarn/logs

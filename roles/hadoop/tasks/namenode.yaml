@@ -1,0 +1,22 @@
+- name: Install NameNode
+  yum:
+    name: hadoop-hdfs-namenode
+    state: latest
+
+- name: Create NameNode Data directories
+  file:
+    dest: /data/1/dfs/nn 
+    owner: hdfs
+    group: hdfs
+    recurse: yes
+    state: directory
+    mode: 0700
+  become: true 
+
+- name: Format NameNode
+  command: sudo -u hdfs hdfs namenode -format -force
+
+- name: Start NameNode
+  service:
+    name: hadoop-hdfs-namenode
+    state: started
